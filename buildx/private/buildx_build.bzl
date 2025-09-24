@@ -60,7 +60,7 @@ def buildx(
         execution_requirements = execution_requirements,
         mnemonic = "BuildX",
         out_dirs = [name],
-        tool = "@rules_buildx//buildx:resolved_toolchain",
+        tool = "@aspect_rules_buildx//buildx:resolved_toolchain",
         tags = tags,
         visibility = visibility,
     )

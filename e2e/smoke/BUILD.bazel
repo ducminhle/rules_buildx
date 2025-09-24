@@ -1,5 +1,5 @@
+load("@aspect_rules_buildx//buildx:defs.bzl", "buildx", "context")
 load("@bazel_skylib//rules:build_test.bzl", "build_test")
-load("@rules_buildx//buildx:defs.bzl", "buildx", "context")
 load("@rules_oci//oci:defs.bzl", "oci_image", "oci_load")
 
 buildx(
