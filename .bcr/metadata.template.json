@@ -1,7 +1,23 @@
 {
-  "homepage": "https://github.com/thesayyn/rules_buildx",
-  "maintainers": [],
-  "repository": ["github:thesayyn/rules_buildx"],
+  "homepage": "https://docs.aspect.build/rules/aspect_rules_buildx",
+  "maintainers": [
+    {
+      "email": "alex@aspect.build",
+      "github": "alexeagle",
+      "name": "Alex Eagle"
+    },
+    {
+      "email": "sahin@aspect.build",
+      "github": "thesayyn",
+      "name": "Şahin Yort"
+    },
+    {
+      "email": "reid@aspect.build",
+      "github": "arrdem",
+      "name": "Reid D McKenzie"
+    }
+  ],
+  "repository": ["github:aspect-build/rules_buildx"],
   "versions": [],
   "yanked_versions": {}
 }
