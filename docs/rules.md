@@ -21,7 +21,7 @@ Run BuildX to produce OCI base image using a Dockerfile.
 | <a id="buildx-name"></a>name |  name of the target   |  none |
 | <a id="buildx-dockerfile"></a>dockerfile |  label to the dockerfile to use for this build   |  none |
 | <a id="buildx-path"></a>path |  path to build context where all will be relative to under Dockerfile   |  `"."` |
-| <a id="buildx-srcs"></a>srcs |  <p align="center"> - </p>   |  `[]` |
+| <a id="buildx-srcs"></a>srcs |  additional srcs to read during build   |  `[]` |
 | <a id="buildx-build_context"></a>build_context |  a dictionary for custom build contexes. https://docs.docker.com/reference/cli/docker/buildx/build/#build-context   |  `[]` |
 | <a id="buildx-execution_requirements"></a>execution_requirements |  execution requirements for the action, we recommend using local as BuildX wants to read files outside of the sandbox.   |  `{"local": "1"}` |
 | <a id="buildx-builder_name"></a>builder_name |  name of the builder to use. https://docs.docker.com/reference/cli/docker/buildx/build/#builder   |  `"rules_buildx_builder"` |
