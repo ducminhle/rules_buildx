@@ -18,7 +18,7 @@ oci = use_extension("@rules_oci//oci:extensions.bzl", "oci")
 oci.pull(
     name = "python_3_11_9-bullseye",
     digest = "sha256:64da8e5fd98057b05db01b49289b774e9fa3b81e87b4883079f6c31fb141b252",
-    image = "python:3.11.9-bullseye",
+    image = "public.ecr.aws/docker/library/python:3.11.9-bullseye",
     platforms = [
         "linux/arm64/v8",
         "linux/amd64",
