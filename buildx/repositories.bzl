@@ -87,7 +87,7 @@ configure_buildx = repository_rule(
 )
 
 # Wrapper macro around everything above, this is the primary API
-def buildx_register_toolchains(name = "buildx", buildx_version = "0.22.0", register = True, host_platform = None, **kwargs):
+def buildx_register_toolchains(name = "buildx", buildx_version = "0.28.0", register = True, host_platform = None, **kwargs):
     """Convenience macro for users which does typical setup.
 
     - create a repository for each built-in platform like "buildx_linux_amd64"

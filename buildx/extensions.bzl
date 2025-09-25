@@ -21,7 +21,7 @@ buildx_toolchain = tag_class(attrs = {
 Base name for generated repositories, allowing more than one buildx toolchain to be registered.
 Overriding the default is only permitted in the root module.
 """, default = _DEFAULT_NAME),
-    "buildx_version": attr.string(doc = "Explicit version of buildx.", default = "0.22.0"),
+    "buildx_version": attr.string(doc = "Explicit version of buildx.", default = "0.28.0"),
 })
 
 def _toolchain_extension(module_ctx):

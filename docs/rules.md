@@ -7,6 +7,8 @@ Public API re-exports
 ## buildx
 
 <pre>
+load("@aspect_rules_buildx//buildx:defs.bzl", "buildx")
+
 buildx(<a href="#buildx-name">name</a>, <a href="#buildx-dockerfile">dockerfile</a>, <a href="#buildx-path">path</a>, <a href="#buildx-srcs">srcs</a>, <a href="#buildx-build_context">build_context</a>, <a href="#buildx-execution_requirements">execution_requirements</a>, <a href="#buildx-builder_name">builder_name</a>, <a href="#buildx-tags">tags</a>,
        <a href="#buildx-visibility">visibility</a>)
 </pre>
@@ -34,6 +36,8 @@ Run BuildX to produce OCI base image using a Dockerfile.
 ## context.oci_layout
 
 <pre>
+load("@aspect_rules_buildx//buildx:defs.bzl", "context")
+
 context.oci_layout(<a href="#context.oci_layout-replace">replace</a>, <a href="#context.oci_layout-layout">layout</a>)
 </pre>
 
@@ -53,6 +57,8 @@ context.oci_layout(<a href="#context.oci_layout-replace">replace</a>, <a href="#
 ## context.sources
 
 <pre>
+load("@aspect_rules_buildx//buildx:defs.bzl", "context")
+
 context.sources(<a href="#context.sources-replace">replace</a>, <a href="#context.sources-sources">sources</a>, <a href="#context.sources-override_path">override_path</a>)
 </pre>
 
