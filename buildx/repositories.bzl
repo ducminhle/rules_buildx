@@ -11,9 +11,10 @@ _ATTRS = {
 }
 
 def _buildx_repo_impl(rctx):
-    url = "https://github.com/docker/buildx/releases/download/v{version}/buildx-v{version}.{}".format(
+    url = "https://github.com/docker/buildx/releases/download/v{version}/buildx-v{version}.{}{suffix}".format(
         rctx.attr.platform,
         version = rctx.attr.buildx_version,
+        suffix = ".exe" if platform == "windows" else "",
     )
     rctx.download(
         url = [url],
@@ -60,7 +61,7 @@ def _impl_configure_buildx(rctx):
         buildx = rctx.path(buildx)
         r = rctx.execute([buildx, "ls"])
         if not builder_name in r.stdout:
-            r = rctx.execute([buildx, "create", "--name", builder_name, "--driver", "docker-container", "--use", "--bootstrap"])
+            r = rctx.execute([buildx, "create", "--name", builder_name, "--driver", "docker-container", "--use", "--bootstrap", "--"])
             if r.return_code != 0:
                 fail("Failed to create buildx driver %s: \nSTDERR:\n%s\nsSTDOUT:\n%s" % (builder_name, r.stderr, r.stdout))
 
