@@ -11,6 +11,8 @@ def buildx(
         build_context = [],
         execution_requirements = {"local": "1"},
         builder_name = "rules_buildx_builder",
+        build_args = {},
+        target = None,
         tags = ["manual"],
         visibility = []):
     """
@@ -24,6 +26,8 @@ def buildx(
         build_context: a dictionary for custom build contexes. https://docs.docker.com/reference/cli/docker/buildx/build/#build-context
         execution_requirements: execution requirements for the action, we recommend using local as BuildX wants to read files outside of the sandbox.
         builder_name: name of the builder to use. https://docs.docker.com/reference/cli/docker/buildx/build/#builder
+        build_args: a dictionary of build arguments to pass to the build
+        target: specify which intermediate stage to finish at, passed to `--target`
         tags: tags for the target
         visibility: visibility for the target
     """
@@ -32,9 +36,17 @@ def buildx(
 
     context_args = []
     context_srcs = []
+    _build_args = []
     for context in build_context:
         context_srcs = context_srcs + context["srcs"]
         context_args.append("--build-context={}={}".format(context["replace"], context["store"]))
+
+    for pair in build_args.items():
+        _build_args.extend(["--build-arg", "%s=%s" % (pair[0], pair[1])])
+    
+    _target = []
+    if target:
+        _target = ["--target", target]
 
     copy_file(
         name = name + "_dockerfile",
@@ -56,7 +68,7 @@ def buildx(
             "--output=type=oci,tar=false,dest=$@",
             # Set the source date epoch to 0 for better reproducibility.
             "--build-arg SOURCE_DATE_EPOCH=0",
-        ] + context_args,
+        ] + _build_args + context_args + _target,
         execution_requirements = execution_requirements,
         mnemonic = "BuildX",
         out_dirs = [name],
