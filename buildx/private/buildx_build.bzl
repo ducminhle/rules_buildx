@@ -12,6 +12,7 @@ def buildx(
         execution_requirements = {"local": "1"},
         builder_name = "rules_buildx_builder",
         build_args = {},
+        ssh = None,
         target = None,
         tags = ["manual"],
         visibility = []):
@@ -27,6 +28,7 @@ def buildx(
         execution_requirements: execution requirements for the action, we recommend using local as BuildX wants to read files outside of the sandbox.
         builder_name: name of the builder to use. https://docs.docker.com/reference/cli/docker/buildx/build/#builder
         build_args: a dictionary of build arguments to pass to the build
+        ssh: SSH agent socket or keys to expose to the build. https://docs.docker.com/reference/cli/docker/buildx/build/#ssh
         target: specify which intermediate stage to finish at, passed to `--target`
         tags: tags for the target
         visibility: visibility for the target
@@ -47,6 +49,10 @@ def buildx(
     _target = []
     if target:
         _target = ["--target", target]
+    
+    _ssh = []
+    if ssh:
+        _ssh.extend(["--ssh", ssh])
 
     copy_file(
         name = name + "_dockerfile",
@@ -68,7 +74,7 @@ def buildx(
             "--output=type=oci,tar=false,dest=$@",
             # Set the source date epoch to 0 for better reproducibility.
             "--build-arg SOURCE_DATE_EPOCH=0",
-        ] + _build_args + context_args + _target,
+        ] + _build_args + context_args + _ssh + _target,
         execution_requirements = execution_requirements,
         mnemonic = "BuildX",
         out_dirs = [name],
