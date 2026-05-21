@@ -41,7 +41,16 @@ oci_load(
     repo_tags = ["example:latest"],
 )
 
+# BuildX can be used to generate files, not just OCI images.
+# Here we use `apt-get` to install `jq` and then copy it out of the image.
+buildx(
+    name = "jq",
+    outs = [ "jq" ],
+    output_type = "local",
+    dockerfile = ":jq.Dockerfile",
+)
+
 build_test(
     name = "test",
-    targets = [":image"],
+    targets = [":image",":jq"],
 )
