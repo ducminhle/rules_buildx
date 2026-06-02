@@ -45,12 +45,15 @@ oci_load(
 # Here we use `apt-get` to install `jq` and then copy it out of the image.
 buildx(
     name = "jq",
-    outs = [ "jq" ],
-    output_type = "local",
+    outs = ["jq"],
     dockerfile = ":jq.Dockerfile",
+    output_type = "local",
 )
 
 build_test(
     name = "test",
-    targets = [":image",":jq"],
+    targets = [
+        ":image",
+        ":jq",
+    ],
 )
