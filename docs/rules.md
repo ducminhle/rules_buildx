@@ -9,8 +9,8 @@ Public API re-exports
 <pre>
 load("@aspect_rules_buildx//buildx:defs.bzl", "buildx")
 
-buildx(<a href="#buildx-name">name</a>, <a href="#buildx-dockerfile">dockerfile</a>, <a href="#buildx-path">path</a>, <a href="#buildx-srcs">srcs</a>, <a href="#buildx-build_context">build_context</a>, <a href="#buildx-execution_requirements">execution_requirements</a>, <a href="#buildx-builder_name">builder_name</a>, <a href="#buildx-tags">tags</a>,
-       <a href="#buildx-visibility">visibility</a>)
+buildx(<a href="#buildx-name">name</a>, <a href="#buildx-dockerfile">dockerfile</a>, <a href="#buildx-path">path</a>, <a href="#buildx-srcs">srcs</a>, <a href="#buildx-build_context">build_context</a>, <a href="#buildx-execution_requirements">execution_requirements</a>, <a href="#buildx-builder_name">builder_name</a>, <a href="#buildx-outs">outs</a>,
+       <a href="#buildx-out_dirs">out_dirs</a>, <a href="#buildx-output_type">output_type</a>, <a href="#buildx-tags">tags</a>, <a href="#buildx-visibility">visibility</a>)
 </pre>
 
 Run BuildX to produce OCI base image using a Dockerfile.
@@ -27,6 +27,9 @@ Run BuildX to produce OCI base image using a Dockerfile.
 | <a id="buildx-build_context"></a>build_context |  a dictionary for custom build contexes. https://docs.docker.com/reference/cli/docker/buildx/build/#build-context   |  `[]` |
 | <a id="buildx-execution_requirements"></a>execution_requirements |  execution requirements for the action, we recommend using local as BuildX wants to read files outside of the sandbox.   |  `{"local": "1"}` |
 | <a id="buildx-builder_name"></a>builder_name |  name of the builder to use. https://docs.docker.com/reference/cli/docker/buildx/build/#builder   |  `"rules_buildx_builder"` |
+| <a id="buildx-outs"></a>outs |  list of output files   |  `None` |
+| <a id="buildx-out_dirs"></a>out_dirs |  list of output directories   |  `None` |
+| <a id="buildx-output_type"></a>output_type |  BuildX output type ("oci" or "local")   |  `"oci"` |
 | <a id="buildx-tags"></a>tags |  tags for the target   |  `["manual"]` |
 | <a id="buildx-visibility"></a>visibility |  visibility for the target   |  `[]` |
 
