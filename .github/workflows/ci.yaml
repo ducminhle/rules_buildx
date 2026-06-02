@@ -15,9 +15,8 @@ concurrency:
   cancel-in-progress: ${{ github.ref_name != 'main' }}
 jobs:
   test:
-    uses: bazel-contrib/.github/.github/workflows/bazel.yaml@v6
+    uses: bazel-contrib/.github/.github/workflows/bazel.yaml@v7.6.0
     with:
-      bazel_versions: ["7.x", "8.x"]
       folders: |
         [
           ".",
