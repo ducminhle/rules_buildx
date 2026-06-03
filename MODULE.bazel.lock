@@ -147,7 +147,7 @@
   "moduleExtensions": {
     "//buildx:extensions.bzl%buildx": {
       "os:osx,arch:aarch64": {
-        "bzlTransitiveDigest": "YUIog+AIHEDRZyU2qvuVCyJDbfMj/g0+U745O285aFo=",
+        "bzlTransitiveDigest": "nj+GZBMIU0pqaBv2Dri8v2chsUseDLEcSPL+vwguaBE=",
         "usagesDigest": "AK6wbDaLuCyeiagrbeleMh1xKRQIF2+snUSPlm7sMHY=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},

@@ -44,16 +44,38 @@ oci_load(
 # BuildX can be used to generate files, not just OCI images.
 # Here we use `apt-get` to install `jq` and then copy it out of the image.
 buildx(
-    name = "jq",
+    name = "jq_buildx",
     outs = ["jq"],
     dockerfile = ":jq.Dockerfile",
     output_type = "local",
+)
+
+# BuildX can accept a list of platforms as an argument.
+# Here we build the same Dockerfile for two different platforms.
+buildx(
+    name = "curl_buildx_linux_amd64",
+    dockerfile = ":curl.Dockerfile",
+    platforms = ["linux/arm64"],
+)
+
+buildx(
+    name = "curl_buildx_linux_arm64",
+    dockerfile = ":curl.Dockerfile",
+    platforms = ["linux/arm64"],
+)
+
+oci_load(
+    name = "curl_load",
+    image = ":curl_buildx_linux_amd64",
+    repo_tags = ["bazel/rules_buildx_curl:latest"],
 )
 
 build_test(
     name = "test",
     targets = [
         ":image",
-        ":jq",
+        ":jq_buildx",
+        ":curl_buildx_linux_amd64",
+        ":curl_buildx_linux_arm64",
     ],
 )
