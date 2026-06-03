@@ -11,9 +11,10 @@ _ATTRS = {
 }
 
 def _buildx_repo_impl(rctx):
-    url = "https://github.com/docker/buildx/releases/download/v{version}/buildx-v{version}.{}".format(
+    url = "https://github.com/docker/buildx/releases/download/v{version}/buildx-v{version}.{}{suffix}".format(
         rctx.attr.platform,
         version = rctx.attr.buildx_version,
+        suffix = ".exe" if rctx.attr.platform == "windows" else "",
     )
     rctx.download(
         url = [url],
@@ -60,7 +61,7 @@ def _impl_configure_buildx(rctx):
         buildx = rctx.path(buildx)
         r = rctx.execute([buildx, "ls"])
         if not builder_name in r.stdout:
-            r = rctx.execute([buildx, "create", "--name", builder_name, "--driver", "docker-container", "--use", "--bootstrap"])
+            r = rctx.execute([buildx, "create", "--name", builder_name, "--driver", "docker-container", "--use", "--bootstrap", "--"])
             if r.return_code != 0:
                 fail("Failed to create buildx driver %s: \nSTDERR:\n%s\nsSTDOUT:\n%s" % (builder_name, r.stderr, r.stdout))
 
@@ -86,7 +87,7 @@ configure_buildx = repository_rule(
 )
 
 # Wrapper macro around everything above, this is the primary API
-def buildx_register_toolchains(name = "buildx", buildx_version = "0.22.0", register = True, host_platform = None, **kwargs):
+def buildx_register_toolchains(name = "buildx", buildx_version = "0.28.0", register = True, host_platform = None, **kwargs):
     """Convenience macro for users which does typical setup.
 
     - create a repository for each built-in platform like "buildx_linux_amd64"

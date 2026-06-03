@@ -49,7 +49,7 @@ def buildx(
         visibility = visibility,
     )
 
-    valid_output_types = [ "oci", "local" ]
+    valid_output_types = ["oci", "local"]
     if output_type not in valid_output_types:
         fail("Invalid output type `{}`. Expected one of {}".format("output_type", ", ".join(valid_output_types)))
 
