@@ -11,6 +11,7 @@ def buildx(
         build_context = [],
         execution_requirements = {"local": "1"},
         builder_name = "rules_buildx_builder",
+        platforms = None,
         outs = None,
         out_dirs = None,
         output_type = "oci",
@@ -27,6 +28,7 @@ def buildx(
         build_context: a dictionary for custom build contexes. https://docs.docker.com/reference/cli/docker/buildx/build/#build-context
         execution_requirements: execution requirements for the action, we recommend using local as BuildX wants to read files outside of the sandbox.
         builder_name: name of the builder to use. https://docs.docker.com/reference/cli/docker/buildx/build/#builder
+        platforms: list of platforms. https://docs.docker.com/reference/cli/docker/buildx/build/#platform
         outs: list of output files
         out_dirs: list of output directories
         output_type: BuildX output type ("oci" or "local")
@@ -41,6 +43,14 @@ def buildx(
     for context in build_context:
         context_srcs = context_srcs + context["srcs"]
         context_args.append("--build-context={}={}".format(context["replace"], context["store"]))
+
+    platform_args = []
+    if platforms:
+        platform_args.append(
+            "--platform={}".format(
+                ",".join(platforms),
+            ),
+        )
 
     copy_file(
         name = name + "_dockerfile",
@@ -76,7 +86,7 @@ def buildx(
             output_arg,
             # Set the source date epoch to 0 for better reproducibility.
             "--build-arg SOURCE_DATE_EPOCH=0",
-        ] + context_args,
+        ] + platform_args + context_args,
         execution_requirements = execution_requirements,
         mnemonic = "BuildX",
         outs = outs,
