@@ -23,8 +23,7 @@ bzl_library(
     srcs = ["buildx_build.bzl"],
     visibility = ["//buildx:__subpackages__"],
     deps = [
-        "@aspect_bazel_lib//lib:copy_file",
-        "@aspect_bazel_lib//lib:run_binary",
+        ":buildx_context",
     ],
 )
 

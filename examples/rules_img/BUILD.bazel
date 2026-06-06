@@ -1,0 +1,32 @@
+load("@aspect_rules_buildx//buildx:defs.bzl", "buildx_build")
+load("@rules_img//img:convert.bzl", "image_index_from_oci_layout")
+load("@rules_img//img:load.bzl", "image_load")
+
+buildx_build(
+    name = "git_oci_layout",
+    buildx_flags = ["--provenance=false"],
+    dockerfile = ":Dockerfile",
+    platforms = [
+        "linux/amd64",
+        "linux/arm64",
+    ],
+)
+
+image_index_from_oci_layout(
+    name = "git_image",
+    src = ":git_oci_layout",
+    layers = [
+        "application/vnd.oci.image.layer.v1.tar+gzip",
+        "application/vnd.oci.image.layer.v1.tar+gzip",
+    ],
+    manifests = [
+        "linux/amd64",
+        "linux/arm64",
+    ],
+)
+
+image_load(
+    name = "load",
+    image = ":git_image",
+    tag = "bazel/rules_buildx_examples_rules_img:latest",
+)

@@ -1,9 +1,60 @@
-"""Workaround for buildx to accept oci-layout with lock file and ingest directory already created.
-See: https://github.com/docker/buildx/issues/2753
-https://github.com/docker/buildx/issues/2753#issuecomment-2436601290
-https://github.com/containerd/containerd/issues/10885
-https://github.com/docker/buildx/issues/2753#issuecomment-2436324404
-"""
+"""BuildX context rules."""
+
+BuildXContextInfo = provider(
+    doc = "Information about a reusable BuildX build context.",
+    fields = {
+        "files": "Depset of files needed by this context.",
+        "store": "BuildX build-context store argument.",
+    },
+)
+
+def _copy_sources_to_context_impl(ctx):
+    output = ctx.actions.declare_directory(ctx.label.name)
+    args = ctx.actions.args()
+    args.add(output.path)
+    args.add_all(ctx.files.srcs)
+    ctx.actions.run_shell(
+        inputs = ctx.files.srcs,
+        outputs = [output],
+        arguments = [args],
+        command = """
+set -euo pipefail
+
+output="$1"
+shift
+
+rm -rf "$output"
+mkdir -p "$output"
+
+for src in "$@"; do
+    if [ -d "$src" ]; then
+        cp -R "$src/." "$output"
+    else
+        cp "$src" "$output/$(basename "$src")"
+    fi
+done
+""",
+        mnemonic = "BuildXContext",
+    )
+    files = depset([output])
+    return [
+        DefaultInfo(files = files),
+        BuildXContextInfo(
+            files = files,
+            store = output.path,
+        ),
+    ]
+
+buildx_context_local = rule(
+    implementation = _copy_sources_to_context_impl,
+    attrs = {
+        "srcs": attr.label_list(
+            allow_files = True,
+            doc = "Sources to stage into this reusable BuildX context.",
+        ),
+    },
+    doc = "Creates a reusable BuildX build context from a list of sources.",
+)
 
 def _oci_layout_buildx_workaround_impl(ctx):
     output = ctx.actions.declare_directory(ctx.label.name)
@@ -34,45 +85,27 @@ $COREUTILS touch "$OUTPUT/ingest/.keep"
         },
         mnemonic = "WorkaroundBuildX",
     )
-    return DefaultInfo(
-        files = depset([output]),
-        runfiles = ctx.attr.layout[DefaultInfo].default_runfiles,
-    )
+    files = depset([output])
+    return [
+        DefaultInfo(
+            files = files,
+            runfiles = ctx.attr.layout[DefaultInfo].default_runfiles,
+        ),
+        BuildXContextInfo(
+            files = files,
+            store = "oci-layout://{}".format(output.path),
+        ),
+    ]
 
-oci_layout_buildx_workaround = rule(
+buildx_context_oci_layout = rule(
     implementation = _oci_layout_buildx_workaround_impl,
     attrs = {
-        "layout": attr.label(allow_single_file = True),
+        "layout": attr.label(
+            allow_single_file = True,
+            mandatory = True,
+            doc = "OCI layout to expose as a BuildX context.",
+        ),
     },
+    doc = "Creates a reusable BuildX context from an OCI layout.",
     toolchains = ["@aspect_bazel_lib//lib:coreutils_toolchain_type"],
-)
-
-def _context_oci_layout(replace, layout):
-    name = str(replace).replace("/", "_").replace(":", "_")
-
-    # TODO: remove once https://github.com/docker/buildx/issues/2753 is solved and set store to layout directly.
-    oci_layout_buildx_workaround(
-        name = name,
-        layout = layout,
-    )
-    return {
-        "replace": replace,
-        "store": "oci-layout://$(location %s)" % name,
-        "srcs": [name],
-    }
-
-def _context_sources(replace, sources, override_path = None):
-    store = "$(location %s)" % sources
-    if override_path:
-        store = override_path
-
-    return {
-        "replace": replace,
-        "store": store,
-        "srcs": sources,
-    }
-
-context = struct(
-    oci_layout = _context_oci_layout,
-    sources = _context_sources,
 )

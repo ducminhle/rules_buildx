@@ -1,32 +1,37 @@
-load("@aspect_rules_buildx//buildx:defs.bzl", "buildx", "context")
+load("@aspect_rules_buildx//buildx:defs.bzl", "buildx_build", "buildx_context_local", "buildx_context_oci_layout")
 load("@bazel_skylib//rules:build_test.bzl", "build_test")
 load("@rules_oci//oci:defs.bzl", "oci_image", "oci_load")
 
-buildx(
+buildx_context_oci_layout(
+    name = "python_context",
+    layout = "@python_3_11_9-bullseye_linux_amd64",
+)
+
+buildx_context_local(
+    name = "lib1_context",
+    srcs = ["//libs/lib1"],
+)
+
+buildx_context_local(
+    name = "bins_hi_context",
+    srcs = ["//bins/hi"],
+)
+
+buildx_context_local(
+    name = "root_context",
+    srcs = glob(["src/*"]),
+)
+
+buildx_build(
     name = "base_image",
-    build_context = [
+    build_context = {
         # replaces FROM python:3.11.9-bullseye with @ubuntu from oci_pull
-        context.oci_layout(
-            "python:3.11.9-bullseye",
-            "@python_3_11_9-bullseye",
-        ),
+        "python:3.11.9-bullseye": ":python_context",
         # make lib1 available as COPY --from=lib1 in the dockerfile
-        context.sources(
-            "lib1",
-            ["//libs/lib1:lib1"],
-            override_path = "libs/lib1",
-        ),
-        context.sources(
-            "bins_hi",
-            ["//bins/hi:hi"],
-            override_path = "$(BINDIR)/bins/hi",
-        ),
-        context.sources(
-            "root",
-            glob(["src/*"]),
-            override_path = "src",
-        ),
-    ],
+        "lib1": ":lib1_context",
+        "bins_hi": ":bins_hi_context",
+        "root": ":root_context",
+    },
     dockerfile = ":Dockerfile",
 )
 
@@ -38,22 +43,23 @@ oci_image(
 oci_load(
     name = "load",
     image = ":image",
-    repo_tags = ["example:latest"],
+    repo_tags = ["bazel/rules_buildx_smoke:latest"],
 )
 
 # BuildX can be used to generate files, not just OCI images.
 # Here we use `apt-get` to install `jq` and then copy it out of the image.
-buildx(
-    name = "jq",
+buildx_build(
+    name = "jq_linux_amd64",
     outs = ["jq"],
     dockerfile = ":jq.Dockerfile",
     output_type = "local",
+    platforms = ["linux/amd64"],
 )
 
 build_test(
     name = "test",
     targets = [
         ":image",
-        ":jq",
+        "jq_linux_amd64",
     ],
 )
