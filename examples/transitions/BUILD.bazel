@@ -1,0 +1,37 @@
+load("@aspect_rules_buildx//buildx:defs.bzl", "buildx_build")
+load("@bazel_lib//lib:transitions.bzl", "platform_transition_filegroup")
+load("@rules_oci//oci:defs.bzl", "oci_image", "oci_load")
+
+platform(
+    name = "linux_amd64",
+    constraint_values = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:linux",
+    ],
+)
+
+buildx_build(
+    name = "git_oci_layout",
+    buildx_flags = ["--provenance=false"],
+    dockerfile = ":Dockerfile",
+    target_compatible_with = [
+        "@platforms//os:linux",
+    ],
+)
+
+platform_transition_filegroup(
+    name = "git_oci_layout_linux_amd64",
+    srcs = [":git_oci_layout"],
+    target_platform = ":linux_amd64",
+)
+
+oci_image(
+    name = "image",
+    base = ":git_oci_layout_linux_amd64",
+)
+
+oci_load(
+    name = "load",
+    image = ":image",
+    repo_tags = ["bazel/rules_buildx_transitions:latest"],
+)
