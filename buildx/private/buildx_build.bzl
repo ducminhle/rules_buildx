@@ -87,6 +87,8 @@ def _buildx_build_impl(ctx):
     args.add(ctx.attr.builder_name)
     args.add(ctx.attr.builder_name_prefix)
     args.add(ctx.file.dockerfile.path)
+    args.add(len(ctx.files.srcs))
+    args.add_all(ctx.files.srcs)
     args.add(_output_arg(ctx, outputs))
     args.add("--platform")
     args.add(",".join(_platforms(ctx)))
@@ -116,11 +118,32 @@ buildx="$1"
 builder_name="$2"
 builder_name_prefix="$3"
 dockerfile_source="$PWD/$4"
-shift 4
+src_count="$5"
+shift 5
+
+srcs=()
+i=0
+while [ "$i" -lt "$src_count" ]; do
+    srcs+=("$PWD/$1")
+    shift
+    i=$((i + 1))
+done
 
 tmpdir="$(mktemp -d "${TMPDIR:-/tmp}/rules_buildx.XXXXXX")"
 dockerfile="$tmpdir/Dockerfile"
 cp "$dockerfile_source" "$dockerfile"
+context="$tmpdir/context"
+mkdir -p "$context"
+
+if [ "$src_count" -gt 0 ]; then
+    for src in "${srcs[@]}"; do
+        if [ -d "$src" ]; then
+            cp -RHL "$src/." "$context"
+        else
+            cp -L "$src" "$context/$(basename "$src")"
+        fi
+    done
+fi
 
 export BUILDX_CONFIG="$tmpdir/buildx"
 mkdir -p "$BUILDX_CONFIG"
@@ -161,6 +184,10 @@ for arg in "$@"; do
             ;;
     esac
 done
+
+if [ "$src_count" -gt 0 ]; then
+    staged_args=("${staged_args[@]:0:${#staged_args[@]}-1}" "$context")
+fi
 
 if [ -z "$builder_name" ]; then
     suffix="$(date +%s)-$$-${RANDOM:-0}"

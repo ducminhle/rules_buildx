@@ -76,6 +76,20 @@ oci_load(
     repo_tags = ["bazel/rules_buildx_curl:latest"],
 )
 
+# Using srcs argument
+buildx_build(
+    name = "motd",
+    srcs = ["motd.txt"],
+    dockerfile = ":motd.Dockerfile",
+    platforms = ["linux/arm64"],
+)
+
+oci_load(
+    name = "motd_load",
+    image = ":motd",
+    repo_tags = ["bazel/rules_buildx_motd:latest"],
+)
+
 build_test(
     name = "test",
     targets = [
@@ -83,5 +97,6 @@ build_test(
         ":jq_buildx",
         ":curl_buildx_linux_amd64",
         ":curl_buildx_linux_arm64",
+        ":motd",
     ],
 )
