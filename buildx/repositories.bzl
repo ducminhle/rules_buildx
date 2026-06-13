@@ -13,7 +13,7 @@ def _buildx_repo_impl(rctx):
     url = "https://github.com/docker/buildx/releases/download/v{version}/buildx-v{version}.{}{suffix}".format(
         rctx.attr.platform,
         version = rctx.attr.buildx_version,
-        suffix = ".exe" if rctx.attr.platform == "windows" else "",
+        suffix = ".exe" if rctx.attr.platform.startswith("windows-") else "",
     )
     rctx.download(
         url = [url],
