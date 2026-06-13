@@ -191,8 +191,8 @@
   "selectedYankedVersions": {},
   "moduleExtensions": {
     "//buildx:extensions.bzl%buildx": {
-      "os:linux,arch:amd64": {
-        "bzlTransitiveDigest": "nj+GZBMIU0pqaBv2Dri8v2chsUseDLEcSPL+vwguaBE=",
+      "os:osx,arch:aarch64": {
+        "bzlTransitiveDigest": "szh1XGtsLAa120yY/TL67tahygTLpq9F4bUdYZg/hhs=",
         "usagesDigest": "AK6wbDaLuCyeiagrbeleMh1xKRQIF2+snUSPlm7sMHY=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
@@ -250,7 +250,7 @@
             "bzlFile": "@@//buildx:repositories.bzl",
             "ruleClassName": "configure_buildx",
             "attributes": {
-              "buildx": "@@_main~buildx~buildx_linux-amd64//:buildx"
+              "buildx": "@@_main~buildx~buildx_darwin-arm64//:buildx"
             }
           },
           "buildx_toolchains": {
@@ -692,8 +692,8 @@
       }
     },
     "@@rules_python~//python/extensions:pip.bzl%pip": {
-      "os:linux,arch:amd64": {
-        "bzlTransitiveDigest": "R0MPS+XbOepgIaMTKSEto+9dYIuCmkDh4akob/M965o=",
+      "os:osx,arch:aarch64": {
+        "bzlTransitiveDigest": "92Zk0y/UH1M9tz7QBpiwNmi7BmUgj375ENpHSB8Wkw0=",
         "usagesDigest": "KebG+ouEJqkTn3X39Yws2LuZ61wmGGuqEyVESsFSAEc=",
         "recordedFileInputs": {
           "@@rules_fuzzing~//fuzzing/requirements.txt": "ab04664be026b632a0d2a2446c4f65982b7654f5b6851d2f9d399a19b7242a5b",
@@ -1439,13 +1439,18 @@
           ],
           [
             "rules_python~~python~pythons_hub",
+            "python_3_10_aarch64-apple-darwin",
+            "rules_python~~python~python_3_10_aarch64-apple-darwin"
+          ],
+          [
+            "rules_python~~python~pythons_hub",
             "python_3_10_host",
             "rules_python~~python~python_3_10_host"
           ],
           [
             "rules_python~~python~pythons_hub",
-            "python_3_10_x86_64-unknown-linux-gnu",
-            "rules_python~~python~python_3_10_x86_64-unknown-linux-gnu"
+            "python_3_11_aarch64-apple-darwin",
+            "rules_python~~python~python_3_11_aarch64-apple-darwin"
           ],
           [
             "rules_python~~python~pythons_hub",
@@ -1454,8 +1459,8 @@
           ],
           [
             "rules_python~~python~pythons_hub",
-            "python_3_11_x86_64-unknown-linux-gnu",
-            "rules_python~~python~python_3_11_x86_64-unknown-linux-gnu"
+            "python_3_12_aarch64-apple-darwin",
+            "rules_python~~python~python_3_12_aarch64-apple-darwin"
           ],
           [
             "rules_python~~python~pythons_hub",
@@ -1464,8 +1469,8 @@
           ],
           [
             "rules_python~~python~pythons_hub",
-            "python_3_12_x86_64-unknown-linux-gnu",
-            "rules_python~~python~python_3_12_x86_64-unknown-linux-gnu"
+            "python_3_8_aarch64-apple-darwin",
+            "rules_python~~python~python_3_8_aarch64-apple-darwin"
           ],
           [
             "rules_python~~python~pythons_hub",
@@ -1474,18 +1479,13 @@
           ],
           [
             "rules_python~~python~pythons_hub",
-            "python_3_8_x86_64-unknown-linux-gnu",
-            "rules_python~~python~python_3_8_x86_64-unknown-linux-gnu"
+            "python_3_9_aarch64-apple-darwin",
+            "rules_python~~python~python_3_9_aarch64-apple-darwin"
           ],
           [
             "rules_python~~python~pythons_hub",
             "python_3_9_host",
             "rules_python~~python~python_3_9_host"
-          ],
-          [
-            "rules_python~~python~pythons_hub",
-            "python_3_9_x86_64-unknown-linux-gnu",
-            "rules_python~~python~python_3_9_x86_64-unknown-linux-gnu"
           ]
         ]
       }

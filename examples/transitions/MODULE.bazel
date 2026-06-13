@@ -1,0 +1,13 @@
+"rules_buildx example with rules_img"
+
+module(name = "rules_buildx_rules_img_example")
+
+bazel_dep(name = "aspect_rules_buildx", version = "0.0.0")
+local_path_override(
+    module_name = "aspect_rules_buildx",
+    path = "../..",
+)
+
+bazel_dep(name = "bazel_lib", version = "3.3.1")
+bazel_dep(name = "platforms", version = "1.0.0")
+bazel_dep(name = "rules_oci", version = "2.2.6")

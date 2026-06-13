@@ -2,79 +2,78 @@
 
 Public API re-exports
 
-<a id="buildx"></a>
+<a id="buildx_build"></a>
 
-## buildx
-
-<pre>
-load("@aspect_rules_buildx//buildx:defs.bzl", "buildx")
-
-buildx(<a href="#buildx-name">name</a>, <a href="#buildx-dockerfile">dockerfile</a>, <a href="#buildx-path">path</a>, <a href="#buildx-srcs">srcs</a>, <a href="#buildx-build_context">build_context</a>, <a href="#buildx-execution_requirements">execution_requirements</a>, <a href="#buildx-builder_name">builder_name</a>, <a href="#buildx-platforms">platforms</a>,
-       <a href="#buildx-outs">outs</a>, <a href="#buildx-out_dirs">out_dirs</a>, <a href="#buildx-output_type">output_type</a>, <a href="#buildx-tags">tags</a>, <a href="#buildx-visibility">visibility</a>)
-</pre>
-
-Run BuildX to produce OCI base image using a Dockerfile.
-
-**PARAMETERS**
-
-
-| Name  | Description | Default Value |
-| :------------- | :------------- | :------------- |
-| <a id="buildx-name"></a>name |  name of the target   |  none |
-| <a id="buildx-dockerfile"></a>dockerfile |  label to the dockerfile to use for this build   |  none |
-| <a id="buildx-path"></a>path |  path to build context where all will be relative to under Dockerfile   |  `"."` |
-| <a id="buildx-srcs"></a>srcs |  additional srcs to read during build   |  `[]` |
-| <a id="buildx-build_context"></a>build_context |  a dictionary for custom build contexes. https://docs.docker.com/reference/cli/docker/buildx/build/#build-context   |  `[]` |
-| <a id="buildx-execution_requirements"></a>execution_requirements |  execution requirements for the action, we recommend using local as BuildX wants to read files outside of the sandbox.   |  `{"local": "1"}` |
-| <a id="buildx-builder_name"></a>builder_name |  name of the builder to use. https://docs.docker.com/reference/cli/docker/buildx/build/#builder   |  `"rules_buildx_builder"` |
-| <a id="buildx-platforms"></a>platforms |  list of platforms. https://docs.docker.com/reference/cli/docker/buildx/build/#platform   |  `None` |
-| <a id="buildx-outs"></a>outs |  list of output files   |  `None` |
-| <a id="buildx-out_dirs"></a>out_dirs |  list of output directories   |  `None` |
-| <a id="buildx-output_type"></a>output_type |  BuildX output type ("oci" or "local")   |  `"oci"` |
-| <a id="buildx-tags"></a>tags |  tags for the target   |  `["manual"]` |
-| <a id="buildx-visibility"></a>visibility |  visibility for the target   |  `[]` |
-
-
-<a id="context.oci_layout"></a>
-
-## context.oci_layout
+## buildx_build
 
 <pre>
-load("@aspect_rules_buildx//buildx:defs.bzl", "context")
+load("@aspect_rules_buildx//buildx:defs.bzl", "buildx_build")
 
-context.oci_layout(<a href="#context.oci_layout-replace">replace</a>, <a href="#context.oci_layout-layout">layout</a>)
+buildx_build(<a href="#buildx_build-name">name</a>, <a href="#buildx_build-srcs">srcs</a>, <a href="#buildx_build-outs">outs</a>, <a href="#buildx_build-build_context">build_context</a>, <a href="#buildx_build-builder_name">builder_name</a>, <a href="#buildx_build-builder_name_prefix">builder_name_prefix</a>, <a href="#buildx_build-buildx_flags">buildx_flags</a>,
+             <a href="#buildx_build-dockerfile">dockerfile</a>, <a href="#buildx_build-execution_requirements">execution_requirements</a>, <a href="#buildx_build-out_dirs">out_dirs</a>, <a href="#buildx_build-output_type">output_type</a>, <a href="#buildx_build-path">path</a>, <a href="#buildx_build-platforms">platforms</a>)
 </pre>
 
+Runs BuildX to produce OCI images or local outputs using a Dockerfile.
+
+**ATTRIBUTES**
 
 
-**PARAMETERS**
+| Name  | Description | Type | Mandatory | Default |
+| :------------- | :------------- | :------------- | :------------- | :------------- |
+| <a id="buildx_build-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
+| <a id="buildx_build-srcs"></a>srcs |  Additional sources read during the build.   | <a href="https://bazel.build/concepts/labels">List of labels</a> | optional |  `[]`  |
+| <a id="buildx_build-outs"></a>outs |  List of output files.   | List of strings | optional |  `[]`  |
+| <a id="buildx_build-build_context"></a>build_context |  Dictionary mapping BuildX context names to buildx_context targets.   | Dictionary: String -> Label | optional |  `{}`  |
+| <a id="buildx_build-builder_name"></a>builder_name |  Existing builder name to use. When set, this rule does not create or remove the builder.   | String | optional |  `""`  |
+| <a id="buildx_build-builder_name_prefix"></a>builder_name_prefix |  Prefix for the temporary builder name created and removed by this rule.   | String | optional |  `"rules_buildx_builder"`  |
+| <a id="buildx_build-buildx_flags"></a>buildx_flags |  Additional flags to pass to docker buildx build.   | List of strings | optional |  `[]`  |
+| <a id="buildx_build-dockerfile"></a>dockerfile |  Label to the Dockerfile to use for this build.   | <a href="https://bazel.build/concepts/labels">Label</a> | required |  |
+| <a id="buildx_build-execution_requirements"></a>execution_requirements |  Execution requirements for the action.   | <a href="https://bazel.build/rules/lib/dict">Dictionary: String -> String</a> | optional |  `{"requires-docker": "1", "requires-network": "1"}`  |
+| <a id="buildx_build-out_dirs"></a>out_dirs |  List of output directories.   | List of strings | optional |  `[]`  |
+| <a id="buildx_build-output_type"></a>output_type |  BuildX output type.   | String | optional |  `"oci"`  |
+| <a id="buildx_build-path"></a>path |  Path to the main build context.   | String | optional |  `"."`  |
+| <a id="buildx_build-platforms"></a>platforms |  BuildX target platforms. When unset, the current Bazel target platform is used.   | List of strings | optional |  `[]`  |
 
 
-| Name  | Description | Default Value |
-| :------------- | :------------- | :------------- |
-| <a id="context.oci_layout-replace"></a>replace |  <p align="center"> - </p>   |  none |
-| <a id="context.oci_layout-layout"></a>layout |  <p align="center"> - </p>   |  none |
+<a id="buildx_context_local"></a>
 
-
-<a id="context.sources"></a>
-
-## context.sources
+## buildx_context_local
 
 <pre>
-load("@aspect_rules_buildx//buildx:defs.bzl", "context")
+load("@aspect_rules_buildx//buildx:defs.bzl", "buildx_context_local")
 
-context.sources(<a href="#context.sources-replace">replace</a>, <a href="#context.sources-sources">sources</a>, <a href="#context.sources-override_path">override_path</a>)
+buildx_context_local(<a href="#buildx_context_local-name">name</a>, <a href="#buildx_context_local-srcs">srcs</a>)
 </pre>
 
+Creates a reusable BuildX build context from a list of sources.
+
+**ATTRIBUTES**
 
 
-**PARAMETERS**
+| Name  | Description | Type | Mandatory | Default |
+| :------------- | :------------- | :------------- | :------------- | :------------- |
+| <a id="buildx_context_local-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
+| <a id="buildx_context_local-srcs"></a>srcs |  Sources to stage into this reusable BuildX context.   | <a href="https://bazel.build/concepts/labels">List of labels</a> | optional |  `[]`  |
 
 
-| Name  | Description | Default Value |
-| :------------- | :------------- | :------------- |
-| <a id="context.sources-replace"></a>replace |  <p align="center"> - </p>   |  none |
-| <a id="context.sources-sources"></a>sources |  <p align="center"> - </p>   |  none |
-| <a id="context.sources-override_path"></a>override_path |  <p align="center"> - </p>   |  `None` |
+<a id="buildx_context_oci_layout"></a>
+
+## buildx_context_oci_layout
+
+<pre>
+load("@aspect_rules_buildx//buildx:defs.bzl", "buildx_context_oci_layout")
+
+buildx_context_oci_layout(<a href="#buildx_context_oci_layout-name">name</a>, <a href="#buildx_context_oci_layout-layout">layout</a>)
+</pre>
+
+Creates a reusable BuildX context from an OCI layout.
+
+**ATTRIBUTES**
+
+
+| Name  | Description | Type | Mandatory | Default |
+| :------------- | :------------- | :------------- | :------------- | :------------- |
+| <a id="buildx_context_oci_layout-name"></a>name |  A unique name for this target.   | <a href="https://bazel.build/concepts/labels#target-names">Name</a> | required |  |
+| <a id="buildx_context_oci_layout-layout"></a>layout |  OCI layout to expose as a BuildX context.   | <a href="https://bazel.build/concepts/labels">Label</a> | required |  |
 
 
