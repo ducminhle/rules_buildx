@@ -1,0 +1,37 @@
+load("@tar.bzl", "mutate", "tar")
+
+tar(
+    name = "context",
+    srcs = [
+        "Dockerfile",
+        "say.py",
+    ],
+    mutate = mutate(
+        strip_prefix = package_name(),
+        package_dir = "stuff",
+    ),
+)
+
+# This creates the BuildX builder if needed.
+# Note that the builder is not torn down after the build.
+genrule(
+    name = "message",
+    srcs = [":context"],
+    outs = ["message.txt"],
+    local = True,
+    cmd = """builder="rules-buildx-toolchain-example"
+
+if ! "$(BUILDX_BIN)" inspect "$$builder" >/dev/null 2>&1; then
+  "$(BUILDX_BIN)" create --name "$$builder" --driver docker-container --bootstrap
+fi
+
+"$(BUILDX_BIN)" build \
+  --builder "$$builder" \
+  --file stuff/Dockerfile \
+  --no-cache \
+  --progress=plain \
+  --output=type=local,dest=$(RULEDIR) \
+  - < "$(location :context)"
+""",
+    toolchains = ["@aspect_rules_buildx//buildx:resolved_toolchain"],
+)
