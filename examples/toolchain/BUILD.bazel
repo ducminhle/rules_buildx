@@ -7,8 +7,8 @@ tar(
         "say.py",
     ],
     mutate = mutate(
-        strip_prefix = package_name(),
         package_dir = "stuff",
+        strip_prefix = package_name(),
     ),
 )
 
@@ -18,7 +18,6 @@ genrule(
     name = "message",
     srcs = [":context"],
     outs = ["message.txt"],
-    local = True,
     cmd = """builder="rules-buildx-toolchain-example"
 
 if ! "$(BUILDX_BIN)" inspect "$$builder" >/dev/null 2>&1; then
@@ -33,5 +32,6 @@ fi
   --output=type=local,dest=$(RULEDIR) \
   - < "$(location :context)"
 """,
+    local = True,
     toolchains = ["@aspect_rules_buildx//buildx:resolved_toolchain"],
 )
