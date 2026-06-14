@@ -113,8 +113,8 @@ oci_load(
 # Using the toolchain in a genrule
 genrule(
     name = "version",
-    cmd = """"$(BUILDX_BIN)" version >$@""",
     outs = ["version.txt"],
+    cmd = """"$(BUILDX_BIN)" version >$@""",
     toolchains = ["@aspect_rules_buildx//buildx:resolved_toolchain"],
 )
 
