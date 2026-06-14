@@ -33,6 +33,10 @@ buildx_build(
         "root": ":root_context",
     },
     dockerfile = ":Dockerfile",
+    target_compatible_with = select({
+        "@platforms//os:windows": ["@platforms//:incompatible"],
+        "//conditions:default": [],
+    }),
 )
 
 oci_image(
