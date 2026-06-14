@@ -110,6 +110,14 @@ oci_load(
     repo_tags = ["bazel/rules_buildx_motd:latest"],
 )
 
+# Using the toolchain in a genrule
+genrule(
+    name = "version",
+    cmd = """"$(BUILDX_BIN)" version >$@""",
+    outs = ["version.txt"],
+    toolchains = ["@aspect_rules_buildx//buildx:resolved_toolchain"],
+)
+
 build_test(
     name = "test",
     targets = [
@@ -118,5 +126,6 @@ build_test(
         ":curl_buildx_linux_amd64",
         ":curl_buildx_linux_arm64",
         ":motd",
+        ":version",
     ],
 )
