@@ -114,7 +114,6 @@ def _buildx_build_impl(ctx):
         outputs = outputs,
         tools = [buildx],
         arguments = [args],
-        use_default_shell_env = True,
         env = {
             "PATH": "/bin:/usr/bin:/usr/local/bin:/opt/homebrew/bin:/Applications/Docker.app/Contents/Resources/bin",
         },
