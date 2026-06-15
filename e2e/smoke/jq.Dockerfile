@@ -11,5 +11,5 @@ RUN apt-get -y update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-FROM scratch
+FROM scratch AS final
 COPY --from=0 /usr/bin/jq .

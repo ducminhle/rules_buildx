@@ -79,6 +79,12 @@ def _buildx_build_impl(ctx):
         context_args.append("--build-context={}={}".format(name, context.store))
         context_inputs.append(context.files)
 
+    buildx_flags = []
+    for flag in ctx.attr.buildx_flags:
+        flag = ctx.expand_location(flag)
+        flag = ctx.expand_make_variables("buildx_flags", flag, {})
+        buildx_flags.append(flag)
+
     toolchain_info = ctx.toolchains["//buildx:toolchain_type"]
     buildx = toolchain_info.buildxinfo.buildx
 
@@ -97,7 +103,7 @@ def _buildx_build_impl(ctx):
     args.add("--build-arg")
     args.add("SOURCE_DATE_EPOCH=0")
     args.add_all(context_args)
-    args.add_all(ctx.attr.buildx_flags)
+    args.add_all(buildx_flags)
     args.add(ctx.attr.path)
 
     ctx.actions.run_shell(

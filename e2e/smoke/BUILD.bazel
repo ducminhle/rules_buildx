@@ -51,6 +51,12 @@ oci_load(
 buildx_build(
     name = "jq_buildx",
     outs = ["jq"],
+    buildx_flags = [
+        "--build-arg",
+        "DEBIAN_FRONTEND=noninteractive",
+        "--target",
+        "final",
+    ],
     dockerfile = ":jq.Dockerfile",
     output_type = "local",
     platforms = ["linux/amd64"],
