@@ -1,0 +1,12 @@
+"rules_buildx toolchain example"
+
+module(name = "rules_buildx_toolchain_example")
+
+bazel_dep(name = "aspect_rules_buildx", version = "0.0.0")
+local_path_override(
+    module_name = "aspect_rules_buildx",
+    path = "../..",
+)
+
+bazel_dep(name = "bazel_lib", version = "3.3.1")
+bazel_dep(name = "tar.bzl", version = "0.10.5")
