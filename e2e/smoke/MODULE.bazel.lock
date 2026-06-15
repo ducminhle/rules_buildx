@@ -252,7 +252,7 @@
   "moduleExtensions": {
     "@@aspect_rules_buildx+//buildx:extensions.bzl%buildx": {
       "os:osx,arch:aarch64": {
-        "bzlTransitiveDigest": "szh1XGtsLAa120yY/TL67tahygTLpq9F4bUdYZg/hhs=",
+        "bzlTransitiveDigest": "0LGkdEPP6euoTJdgb5emFp+LW5QXWfBn3gAB/z29UzI=",
         "usagesDigest": "ZpR2jcmQDJm6iLdWYU3OA5wygPSnNlKJ7JYbD/rhkuc=",
         "recordedInputs": [
           "REPO_MAPPING:aspect_rules_buildx+,aspect_bazel_lib aspect_bazel_lib+",
